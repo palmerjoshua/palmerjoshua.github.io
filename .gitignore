@@ -1,2 +1,6 @@
-.idea
-.ssh-setup/
+node_modules/
+_site/
+.DS_Store
+*.log
+.cache/
+SETUP.md

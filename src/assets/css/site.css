@@ -1,0 +1,569 @@
+/* ============================================================
+   site.css
+   josh-palmer.com — single stylesheet for all page types.
+
+   Sections:
+     1. Reset + design tokens
+     2. Typography defaults
+     3. Landing page (.page-landing)  — Dimension-style centered card
+     4. Long-form pages (.page)       — blog listing + post
+     5. Code highlighting (Prism)
+     6. Mobile responsive
+   ============================================================ */
+
+/* ---------- 1. Reset + tokens ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:root {
+  /* Palette — derived from Dimension's dark scheme */
+  --bg: #1b1f22;
+  --bg-card: rgba(0, 0, 0, 0.25);
+  --bg-card-border: rgba(255, 255, 255, 0.125);
+  --text: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --text-strong: #ffffff;
+  --link: #ffffff;
+  --link-underline: rgba(255, 255, 255, 0.4);
+  --link-underline-hover: #ffffff;
+  --rule: rgba(255, 255, 255, 0.15);
+  --code-bg: rgba(0, 0, 0, 0.4);
+  --code-border: rgba(255, 255, 255, 0.08);
+
+  /* Type scale */
+  --font-sans: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: Charter, "Iowan Old Style", "Source Serif Pro", Georgia, serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, "Courier New", monospace;
+}
+
+/* ---------- 2. Typography defaults ---------- */
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid var(--link-underline);
+  transition: border-color 0.15s ease;
+}
+
+a:hover {
+  border-bottom-color: var(--link-underline-hover);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-strong);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============================================================
+   3. LANDING PAGE — Dimension-style centered card
+   ============================================================ */
+
+body.page-landing {
+  /* The Dimension look: dark gradient background with subtle warmth */
+  background:
+    radial-gradient(ellipse at center, #2a2f33 0%, #1b1f22 55%, #15181a 100%);
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2em 1.5em;
+}
+
+body.page-landing #wrapper {
+  width: 100%;
+  max-width: 32em;
+  text-align: center;
+}
+
+body.page-landing #header .logo {
+  display: inline-block;
+  width: 5.5em;
+  height: 5.5em;
+  border-radius: 100%;
+  border: 1px solid var(--bg-card-border);
+  overflow: hidden;
+  margin-bottom: 1.75em;
+  background: var(--bg-card);
+}
+
+body.page-landing #header .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.page-landing #header .content {
+  border-top: 1px solid var(--bg-card-border);
+  border-bottom: 1px solid var(--bg-card-border);
+  padding: 1.75em 0;
+  margin-bottom: 1.75em;
+}
+
+body.page-landing #header h1 {
+  font-size: 2.5em;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  margin-bottom: 0.4em;
+}
+
+body.page-landing #header p {
+  color: var(--text-muted);
+  font-size: 1em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+body.page-landing #header nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+body.page-landing #header nav a {
+  display: inline-block;
+  padding: 0.6em 1.4em;
+  border: 1px solid var(--bg-card-border);
+  border-radius: 100px;
+  font-size: 0.85em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom-width: 1px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+body.page-landing #header nav a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* About section, expandable */
+body.page-landing .about-card {
+  margin-top: 4em;
+  padding: 2em;
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 4px;
+  max-width: 32em;
+}
+
+body.page-landing .about-card h2 {
+  font-size: 1.25em;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75em;
+}
+
+body.page-landing .about-card p {
+  margin: 0;
+}
+
+body.page-landing #footer {
+  margin-top: 3em;
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+/* ============================================================
+   4. LONG-FORM PAGES — blog listing + post
+   ============================================================ */
+
+body.page-blog-listing,
+body.page-post {
+  background: var(--bg);
+}
+
+.page {
+  max-width: 38em;
+  margin: 0 auto;
+  padding: 3em 1.5em 5em;
+}
+
+/* --- Top nav (back link) --- */
+
+.topnav {
+  font-size: 0.9em;
+  margin-bottom: 3em;
+}
+
+.topnav a {
+  color: var(--text-muted);
+  border-bottom: 0;
+  letter-spacing: 0.05em;
+}
+
+.topnav a:hover {
+  color: var(--text);
+}
+
+/* --- Listing page --- */
+
+body.page-blog-listing .page-header {
+  margin-bottom: 3.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid var(--rule);
+}
+
+body.page-blog-listing .page-header h1 {
+  font-size: 2.25em;
+  margin-bottom: 0.3em;
+}
+
+body.page-blog-listing .page-tagline {
+  color: var(--text-muted);
+  font-size: 1em;
+}
+
+.post-list {
+  list-style: none;
+}
+
+.post-list__item {
+  padding-bottom: 2.5em;
+  margin-bottom: 2.5em;
+  border-bottom: 1px solid var(--rule);
+}
+
+.post-list__item:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.post-list__title {
+  font-size: 1.4em;
+  margin-bottom: 0.35em;
+  line-height: 1.3;
+}
+
+.post-list__title a {
+  border-bottom: 0;
+  color: var(--text-strong);
+}
+
+.post-list__title a:hover {
+  border-bottom: 1px solid var(--link-underline-hover);
+}
+
+.post-list__meta {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.85em;
+}
+
+.post-list__summary {
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.empty-state {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* --- Post page --- */
+
+.post-header {
+  margin-bottom: 3em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid var(--rule);
+}
+
+.post-header h1 {
+  font-size: 2.4em;
+  line-height: 1.2;
+  margin-bottom: 0.4em;
+  letter-spacing: -0.015em;
+}
+
+.post-meta {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.post-meta__sep {
+  margin: 0 0.5em;
+}
+
+/* Long-form body — serif column for readability */
+.post-body {
+  font-family: var(--font-serif);
+  font-size: 1.125em;
+  line-height: 1.7;
+}
+
+.post-body p {
+  margin-bottom: 1.4em;
+}
+
+.post-body h2 {
+  font-family: var(--font-sans);
+  font-size: 1.5em;
+  margin-top: 2.5em;
+  margin-bottom: 0.85em;
+  letter-spacing: -0.005em;
+}
+
+.post-body h3 {
+  font-family: var(--font-sans);
+  font-size: 1.2em;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+
+.post-body ul,
+.post-body ol {
+  margin-bottom: 1.4em;
+  padding-left: 1.5em;
+}
+
+.post-body li {
+  margin-bottom: 0.45em;
+}
+
+.post-body blockquote {
+  border-left: 3px solid var(--link-underline);
+  padding: 0.3em 0 0.3em 1.4em;
+  margin: 1.6em 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.post-body strong {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.post-body em {
+  font-style: italic;
+}
+
+.post-body a {
+  border-bottom: 1px solid var(--link-underline);
+}
+
+.post-body img {
+  margin: 2em auto;
+  border-radius: 4px;
+  border: 1px solid var(--code-border);
+}
+
+.post-body figure {
+  margin: 2em 0;
+}
+
+.post-body figcaption {
+  font-family: var(--font-sans);
+  color: var(--text-muted);
+  font-size: 0.85em;
+  text-align: center;
+  margin-top: 0.5em;
+  font-style: italic;
+}
+
+/* Tables */
+.post-body table {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.95em;
+  border-collapse: collapse;
+  margin: 2em 0;
+}
+
+.post-body th,
+.post-body td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6em 0.85em;
+  border-bottom: 1px solid var(--rule);
+}
+
+.post-body th {
+  border-bottom: 2px solid var(--text-muted);
+  font-weight: 600;
+}
+
+/* Footer of any long-form page */
+.page-footer {
+  margin-top: 4em;
+  padding-top: 2em;
+  border-top: 1px solid var(--rule);
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+.page-footer a {
+  color: var(--text-muted);
+}
+
+.page-footer a:hover {
+  color: var(--text);
+}
+
+/* ============================================================
+   5. CODE — inline + blocks (works with Prism plugin classes)
+   ============================================================ */
+
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* Inline code — works inside both sans (listing) and serif (body) */
+.post-body code,
+.post-list__summary code,
+.page-tagline code {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--code-border);
+  border-radius: 3px;
+  padding: 0.1em 0.4em;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+/* Code block */
+.post-body pre {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 1.1em 1.3em;
+  margin: 1.8em 0;
+  overflow-x: auto;
+  font-size: 0.9em;
+  line-height: 1.55;
+  -webkit-overflow-scrolling: touch;
+}
+
+.post-body pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  white-space: pre;
+  word-wrap: normal;
+  color: var(--text);
+}
+
+/* Prism token colors — minimal, dark-friendly */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata { color: rgba(255, 255, 255, 0.4); font-style: italic; }
+.token.punctuation { color: rgba(255, 255, 255, 0.6); }
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted { color: #e6a23c; }
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted { color: #87c38f; }
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string { color: #d2d2d2; }
+.token.atrule,
+.token.attr-value,
+.token.keyword { color: #7eb6d3; }
+.token.function,
+.token.class-name { color: #c39bd3; }
+.token.regex,
+.token.important,
+.token.variable { color: #e8a87c; }
+
+/* ============================================================
+   6. RESPONSIVE
+   ============================================================ */
+
+@media screen and (max-width: 600px) {
+  .page {
+    padding: 2em 1.2em 4em;
+  }
+
+  body.page-landing #header h1 {
+    font-size: 2em;
+  }
+
+  body.page-landing #header nav ul {
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  body.page-landing #header nav a {
+    display: block;
+  }
+
+  .post-header h1 {
+    font-size: 1.85em;
+  }
+
+  .post-body {
+    font-size: 1.05em;
+  }
+
+  .post-body pre {
+    font-size: 0.8em;
+    padding: 0.85em 1em;
+  }
+}
+
+/* Attribution link in landing page footer */
+body.page-landing #footer .attribution {
+  margin-top: 0.5em;
+  font-size: 0.8em;
+  color: var(--text-muted);
+}
+
+body.page-landing #footer .attribution a {
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+body.page-landing #footer .attribution a:hover {
+  color: var(--text);
+  border-bottom-color: var(--link-underline-hover);
+}
